@@ -39,8 +39,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated, logout } = useAuthStore();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    // Set sidebar open on desktop, closed on mobile initially
+    if (window.innerWidth >= 1024) {
+      setSidebarOpen(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -54,18 +61,46 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close sidebar on route change (for mobile)
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
+  }, [pathname]);
+
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-[#020617] flex">
+    <div className="min-h-screen bg-[#020617] flex relative">
+      {/* Backdrop for mobile */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 bg-[#0A1F3C]/80 backdrop-blur-xl border-r border-blue-500/10 transition-transform duration-300 lg:translate-x-0 lg:static",
-          !sidebarOpen && "-translate-x-full"
+          "fixed inset-y-0 left-0 z-50 w-72 bg-[#0A1F3C]/95 backdrop-blur-2xl border-r border-blue-500/10 transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:bg-[#0A1F3C]/80",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="h-full flex flex-col p-6">
+        <div className="h-full flex flex-col p-6 relative">
+          {/* Close button for mobile */}
+          <button 
+            onClick={() => setSidebarOpen(false)}
+            className="absolute top-6 right-6 p-2 text-blue-400/60 hover:text-blue-300 lg:hidden transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
           <div className="flex items-center gap-3 mb-12 px-2">
             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 border border-blue-400/30">
               <span className="text-blue-50 font-black text-xl">P</span>
@@ -140,13 +175,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Header */}
         <header 
           className={cn(
-            "h-20 flex items-center justify-between px-8 z-40 transition-all duration-300",
+            "h-20 flex items-center justify-between px-4 sm:px-6 lg:px-8 z-40 transition-all duration-300",
             scrolled ? "bg-[#020617]/80 backdrop-blur-md border-b border-blue-500/10" : "bg-transparent"
           )}
         >
           <div className="flex items-center gap-4 lg:hidden">
             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-blue-400/60 hover:text-blue-300 transition-colors">
-              {sidebarOpen ? <X /> : <Menu />}
+              <Menu />
             </button>
           </div>
 
@@ -159,12 +194,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button className="relative p-2 text-blue-400/60 hover:text-blue-300 transition-colors group">
               <Bell className="w-5 h-5" />
               <span className="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full border-2 border-[#020617]" />
             </button>
-            <div className="w-[1px] h-6 bg-blue-500/10 mx-2" />
+            <div className="w-[1px] h-6 bg-blue-500/10 mx-1 sm:mx-2" />
             <button className="p-2 text-blue-400/60 hover:text-blue-300 transition-colors">
               <Settings className="w-5 h-5" />
             </button>
@@ -172,7 +207,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '@/lib/store';
 import { 
   LayoutDashboard, 
@@ -29,8 +29,16 @@ export default function AdminLayout({
 }) {
   const { user, isAuthenticated, logout } = useAuthStore();
   const router = useRouter();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const pathname = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Set sidebar open on desktop, closed on mobile initially
+    if (window.innerWidth >= 1024) {
+      setIsSidebarOpen(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated || user?.role !== 'admin') {
@@ -39,6 +47,13 @@ export default function AdminLayout({
       setIsLoaded(true);
     }
   }, [isAuthenticated, user, router]);
+
+  // Close sidebar on route change (for mobile)
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+    }
+  }, [pathname]);
 
   if (!isLoaded) return null;
 
@@ -50,15 +65,36 @@ export default function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white flex">
+    <div className="min-h-screen bg-[#020617] text-white flex relative">
+      {/* Backdrop for mobile */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-[#0f172a] border-r border-white/5 transition-transform duration-300 lg:translate-x-0 lg:static",
-          !isSidebarOpen && "-translate-x-full"
+          "fixed inset-y-0 left-0 z-50 w-64 bg-[#0f172a] border-r border-white/5 transition-all duration-300 ease-in-out lg:translate-x-0 lg:static",
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="h-full flex flex-col p-6">
+        <div className="h-full flex flex-col p-6 relative">
+          {/* Close button for mobile */}
+          <button 
+            onClick={() => setIsSidebarOpen(false)}
+            className="absolute top-6 right-6 p-2 text-slate-400 hover:text-white lg:hidden transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
           <div className="flex items-center gap-3 mb-10 px-2">
             <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
               <ShieldCheck className="w-6 h-6 text-white" />
@@ -98,12 +134,12 @@ export default function AdminLayout({
       {/* Main Content */}
       <main className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
         {/* Top Header */}
-        <header className="h-16 border-b border-white/5 bg-[#0f172a]/50 backdrop-blur-xl flex items-center justify-between px-8 shrink-0">
+        <header className="h-16 border-b border-white/5 bg-[#0f172a]/50 backdrop-blur-xl flex items-center justify-between px-4 sm:px-6 lg:px-8 shrink-0">
           <button 
             className="lg:hidden p-2 hover:bg-white/5 rounded-lg"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
-            {isSidebarOpen ? <X /> : <Menu />}
+            <Menu />
           </button>
           
           <div className="flex items-center gap-4 ml-auto">
@@ -118,7 +154,7 @@ export default function AdminLayout({
         </header>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {children}
         </div>
       </main>

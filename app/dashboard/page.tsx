@@ -75,9 +75,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 sm:space-y-8 pb-12">
       {/* Welcome Banner */}
-      <section className="relative overflow-hidden p-8 rounded-[2.5rem] bg-gradient-to-br from-blue-700 to-blue-900 shadow-2xl shadow-blue-900/40 border border-blue-500/20">
+      <section className="relative overflow-hidden p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-br from-blue-700 to-blue-900 shadow-2xl shadow-blue-900/40 border border-blue-500/20">
         <div className="relative z-10 max-w-2xl">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -87,10 +87,10 @@ export default function DashboardPage() {
             <Star className="w-3 h-3 fill-blue-300" />
             Active Plan Session
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-black text-blue-50 mb-3 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-blue-50 mb-3 tracking-tight">
             Welcome, <span className="text-blue-400">{user?.name}</span>!
           </h1>
-          <p className="text-blue-200/80 text-lg font-bold max-w-md leading-relaxed">
+          <p className="text-blue-200/80 text-base sm:text-lg font-bold max-w-md leading-relaxed">
             {analytics?.ai_suggestion || "You're doing great! Keep up the momentum and reach your learning goals faster."}
           </p>
         </div>
@@ -99,18 +99,18 @@ export default function DashboardPage() {
         <div className="absolute top-0 right-0 h-full w-1/3 pointer-events-none opacity-20">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-[32px] border-blue-400 rounded-full blur-3xl" />
         </div>
-        <Rocket className="absolute -bottom-4 -right-4 w-48 h-48 text-blue-400/10 -rotate-12 pointer-events-none" />
+        <Rocket className="absolute -bottom-4 -right-4 w-32 h-32 sm:w-48 sm:h-48 text-blue-400/10 -rotate-12 pointer-events-none" />
       </section>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {stats.map((stat, idx) => (
           <motion.div
             key={idx}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="glass p-6 rounded-[2rem] border-blue-500/10 group hover:border-blue-400/30 transition-all duration-300"
+            className="glass p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border-blue-500/10 group hover:border-blue-400/30 transition-all duration-300"
           >
             <div className="flex items-center gap-4">
               <div className={cn("p-3 rounded-2xl group-hover:scale-110 transition-transform duration-300 bg-blue-500/10")}>
@@ -118,34 +118,34 @@ export default function DashboardPage() {
               </div>
               <div>
                 <p className="text-blue-400/40 text-[10px] font-black uppercase tracking-widest">{stat.label}</p>
-                <h3 className="text-2xl font-black text-blue-100">{stat.value}</h3>
+                <h3 className="text-xl sm:text-2xl font-black text-blue-100">{stat.value}</h3>
               </div>
             </div>
           </motion.div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         {/* Recent Plans */}
-        <section className="lg:col-span-2 space-y-6">
+        <section className="lg:col-span-2 space-y-4 sm:space-y-6">
           <div className="flex items-center justify-between px-2">
-            <h2 className="text-2xl font-black text-blue-100 flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-black text-blue-100 flex items-center gap-2">
               <Library className="w-6 h-6 text-blue-500" />
               Recent Plans
             </h2>
-            <Link href="/dashboard/my-plans" className="text-sm font-black text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1 group uppercase tracking-widest">
+            <Link href="/dashboard/my-plans" className="text-[10px] sm:text-sm font-black text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1 group uppercase tracking-widest text-nowrap">
               View All <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {recentPlans.map((plan, idx) => (
               <motion.div
                 key={plan.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3 + (idx * 0.1) }}
-                className="glass p-6 rounded-[2rem] border-blue-500/10 hover:border-blue-400/40 transition-all group relative overflow-hidden"
+                className="glass p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border-blue-500/10 hover:border-blue-400/40 transition-all group relative overflow-hidden"
               >
                 <div className="flex flex-col h-full relative z-10">
                   <div className="flex justify-between items-start mb-4">
@@ -156,10 +156,10 @@ export default function DashboardPage() {
                       {new Date(plan.created_at).toLocaleDateString()}
                     </div>
                   </div>
-                  <h3 className="text-xl font-black text-blue-100 mb-2 line-clamp-1 group-hover:text-blue-400 transition-colors">
+                  <h3 className="text-lg sm:text-xl font-black text-blue-100 mb-2 line-clamp-1 group-hover:text-blue-400 transition-colors">
                     {plan.title}
                   </h3>
-                  <p className="text-sm text-blue-400/50 mb-6 flex-1 line-clamp-2 font-medium">
+                  <p className="text-xs sm:text-sm text-blue-400/50 mb-6 flex-1 line-clamp-2 font-medium">
                     {plan.duration || "Self-paced study journey"}
                   </p>
                   
@@ -183,14 +183,14 @@ export default function DashboardPage() {
             <Link href="/dashboard/generate-plan">
               <motion.div
                 whileHover={{ scale: 1.02, backgroundColor: "rgba(37, 99, 235, 0.05)" }}
-                className="h-full border-2 border-dashed border-blue-500/10 rounded-[2rem] flex flex-col items-center justify-center p-8 gap-4 group transition-all"
+                className="h-full min-h-[160px] border-2 border-dashed border-blue-500/10 rounded-[1.5rem] sm:rounded-[2rem] flex flex-col items-center justify-center p-6 sm:p-8 gap-4 group transition-all"
               >
-                <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-600 group-hover:scale-110 transition-all duration-300 border border-blue-400/20">
-                  <Plus className="w-8 h-8 text-blue-500 group-hover:text-blue-50 transition-colors" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-600 group-hover:scale-110 transition-all duration-300 border border-blue-400/20">
+                  <Plus className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 group-hover:text-blue-50 transition-colors" />
                 </div>
                 <div className="text-center">
-                  <h4 className="text-lg font-black text-blue-100 uppercase tracking-tighter">Create New Plan</h4>
-                  <p className="text-xs font-bold text-blue-400/40 uppercase tracking-widest">Launch AI Architect</p>
+                  <h4 className="text-base sm:text-lg font-black text-blue-100 uppercase tracking-tighter">Create New Plan</h4>
+                  <p className="text-[10px] font-bold text-blue-400/40 uppercase tracking-widest">Launch AI Architect</p>
                 </div>
               </motion.div>
             </Link>
@@ -198,8 +198,8 @@ export default function DashboardPage() {
         </section>
 
         {/* Action Sidebar */}
-        <aside className="space-y-8">
-          <section className="glass p-8 rounded-[2.5rem] border-blue-500/20 bg-blue-500/5">
+        <aside className="space-y-6 sm:space-y-8">
+          <section className="glass p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border-blue-500/20 bg-blue-500/5">
             <h2 className="text-xl font-black text-blue-100 mb-6 flex items-center gap-2">
               <Zap className="w-5 h-5 text-blue-400" />
               Quick Actions
@@ -223,15 +223,15 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          <section className="glass p-8 rounded-[2.5rem] border-blue-500/10 overflow-hidden relative">
+          <section className="glass p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border-blue-500/10 overflow-hidden relative">
             <div className="relative z-10">
-              <h2 className="text-xl font-black text-blue-100 mb-2">Upgrade to Pro</h2>
-              <p className="text-xs font-bold text-blue-400/50 mb-6 uppercase tracking-widest leading-relaxed">Unlock advanced AI analysis and unlimited plans.</p>
+              <h2 className="text-lg sm:text-xl font-black text-blue-100 mb-2">Upgrade to Pro</h2>
+              <p className="text-[10px] font-bold text-blue-400/50 mb-6 uppercase tracking-widest leading-relaxed">Unlock advanced AI analysis and unlimited plans.</p>
               <button className="w-full py-4 bg-blue-600 text-blue-50 font-black text-xs rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg shadow-blue-600/20 border border-blue-400/30">
                 COMING SOON
               </button>
             </div>
-            <Star className="absolute -top-4 -right-4 w-24 h-24 text-blue-400/5 -rotate-12" />
+            <Star className="absolute -top-4 -right-4 w-20 h-20 sm:w-24 sm:h-24 text-blue-400/5 -rotate-12" />
           </section>
         </aside>
       </div>
